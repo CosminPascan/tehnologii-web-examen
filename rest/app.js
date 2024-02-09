@@ -51,9 +51,24 @@ app.get('/ships/:id', async (req, res) => {
 
 
 app.put('/ships/:id', async (req, res) => {
+    let ship = await Ship.findByPk(req.params.id)
+    if (!ship) {
+        res.status(404).json({message: 'not found'})
+    } else {
+        Object.entries(req.body).forEach(([key, value]) => ship[key] = value);
+        await ship.save();
+        res.status(202).json({message: 'accepted'})
+    }
 })
 
 app.delete('/ships/:id', async (req, res) => {
+    let ship = await Ship.findByPk(req.params.id)
+    if (!ship) {
+        res.status(404).json({message: 'not found'})
+    } else {
+        await ship.destroy()
+        res.status(202).json({message: 'accepted'})
+    }
 })
 
 
